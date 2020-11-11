@@ -1,1 +1,0 @@
-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../src/ownerMessage/index.ts"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;AAAA,8DAA2D;AAE9C,QAAA,YAAY,GAAG,iCAAe,CACzC;IACE,CAAC,cAAc,oDAAS,gBAAgB,IAAE;IAC1C,CAAC,MAAM,oDAAS,QAAQ,IAAE;CAC3B,EACD,iBAAiB,EACjB,CAAC,GAAG,EAAE,EAAE,CAAC,GAAG,CAAC,KAAK,EAAE,OAAO,KAAK,GAAG,CAAC,MAAM,CAAC,EAAE,CAC9C,CAAC"}
