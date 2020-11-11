@@ -1,11 +1,10 @@
-import { Client } from "discord.js";
 import dotenv from "dotenv-safe";
+import { client } from "./client";
 import { epicCommands } from "./epicCommands";
+import { action as rick } from "./epicCommands/rick";
 import { ownerMessage } from "./ownerMessage";
 
 dotenv.config();
-
-export const client = new Client();
 
 client.on("ready", () => {
   if (client.user) {
@@ -16,8 +15,12 @@ client.on("ready", () => {
 });
 
 client.on("message", async (msg) => {
+  if (Math.random() < 0.02) {
+    rick(msg);
+  }
+
   // The message is a command
-  if (msg.content.startsWith("!")) {
+  if (msg.author.id !== client.user?.id && msg.content.startsWith("!")) {
     const checkMsgFunctions = [ownerMessage, epicCommands];
 
     let l = 4;
@@ -58,12 +61,6 @@ client.on("message", async (msg) => {
     );
 
     msg.reply(reply.join("\n"));
-  }
-
-  if (Math.random() < 0.02) {
-    const rick = (await import("./epicCommands/rick")).default;
-
-    rick(msg);
   }
 });
 

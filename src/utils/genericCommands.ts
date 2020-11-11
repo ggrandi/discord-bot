@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
 
-export interface ImportCommand {
-  default: (msg: Message, args: string[]) => void | Promise<void>;
+export interface ImportAction {
+  action: (msg: Message, args: string[]) => void | Promise<void>;
   description: string;
 }
 
@@ -13,7 +13,7 @@ type CommandReturn =
       success: false;
       /** When it fails, it only sends one dm to the user */
       commands: ((length: number) => string)[];
-      /** The longest commans */
+      /** The longest command */
       maxLength: number;
     };
 
@@ -24,7 +24,7 @@ type CommandReturn =
  * @param escape the character to signal to search for commands (default: "!")
  */
 export const genericCommands = (
-  commandArr: [string, Promise<ImportCommand>][],
+  commandArr: [string, Promise<ImportAction>][],
   name: string,
   condition: ((msg: Message) => boolean) | true = true
 ) => async (msg: Message): Promise<CommandReturn> => {
@@ -33,11 +33,11 @@ export const genericCommands = (
   if (condition === true || condition(msg)) {
     const command = msg.content.slice(1).split(" ")[0];
 
-    const action = commandMap.get(command);
+    const importedAction = commandMap.get(command);
 
-    if (action) {
+    if (importedAction) {
       await Promise.resolve(
-        (await action).default(msg, msg.content.split(" ").slice(1))
+        (await importedAction).action(msg, msg.content.split(" ").slice(1))
       );
     } else {
       const commands: ((l: number) => string)[] = [() => name];

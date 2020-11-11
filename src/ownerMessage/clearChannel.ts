@@ -8,7 +8,7 @@ interface Confirmation {
 
 const confirmationMap = new Map<string, Confirmation>();
 
-export default async (msg: Message, args: string[]): Promise<void> => {
+export const action = async (msg: Message, args: string[]): Promise<void> => {
   if (msg.channel instanceof TextChannel) {
     const channelId = msg.channel.id;
 
