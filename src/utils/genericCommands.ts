@@ -1,7 +1,7 @@
 import { Message } from "discord.js";
 
 export interface ImportAction {
-  action: (msg: Message, args: string[]) => void | Promise<void>;
+  action: (msg: Message, args: string) => void | Promise<void>;
   description: string;
 }
 
@@ -37,7 +37,10 @@ export const genericCommands = (
 
     if (importedAction) {
       await Promise.resolve(
-        (await importedAction).action(msg, msg.content.split(" ").slice(1))
+        (await importedAction).action(
+          msg,
+          msg.content.slice(command.length + 2)
+        )
       );
     } else {
       const commands: ((l: number) => string)[] = [() => name];

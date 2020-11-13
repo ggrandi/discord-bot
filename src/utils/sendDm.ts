@@ -1,11 +1,17 @@
 import { User } from "discord.js";
 
-export const sendDm = async (user: User, dm: string) => {
+export const sendDm = async (user: User, dm?: string) => {
   try {
     const dmChannel = await user.createDM();
 
-    dmChannel.send(dm);
+    if (dm) {
+      dmChannel.send(dm);
+    }
+
+    return dmChannel;
   } catch (e) {
     console.error(e);
   }
+
+  return null;
 };

@@ -8,37 +8,47 @@ interface Confirmation {
 
 const confirmationMap = new Map<string, Confirmation>();
 
-export const action = async (msg: Message, args: string[]): Promise<void> => {
+export const action = async (msg: Message, args: string): Promise<void> => {
   if (msg.channel instanceof TextChannel) {
     const channelId = msg.channel.id;
 
     const confirmation = confirmationMap.get(channelId);
 
+    const clear = async () => {
+      const result = await (msg.channel as TextChannel).bulkDelete(100);
+
+      const channelName = msg.guild?.channels.cache.get(msg.channel.id)?.name;
+
+      const dms = await sendDm(
+        msg.author,
+        `cleared all messages in ${channelName || "the channel"}`
+      );
+
+      if (dms) {
+        dms.send(`|| ${result.toJSON()} ||`);
+      }
+    };
+
     if (confirmation && msg.author.id === confirmation.userId) {
-      if (args[0] === "confirm") {
-        while (msg.channel.lastMessage) {
-          await msg.channel.bulkDelete(100);
-        }
+      if (args.startsWith("confirm")) {
+        await clear();
         confirmationMap.delete(channelId);
-
-        const channelName = msg.guild?.channels.cache.get(msg.channel.id)?.name;
-
-        sendDm(
-          msg.author,
-          `cleared all messages in ${channelName || "the channel"}`
-        );
       } else {
         msg.reply("please confirm the deletion with `!clearChannel confirm`");
       }
     } else {
-      confirmationMap.set(channelId, {
-        time: Date.now(),
-        userId: msg.author.id,
-      });
+      if (args.startsWith("confirm")) {
+        await clear();
+      } else {
+        confirmationMap.set(channelId, {
+          time: Date.now(),
+          userId: msg.author.id,
+        });
 
-      msg.reply(
-        `confirm the clearing of this channel with \`!clearChannel confirm\``
-      );
+        msg.reply(
+          `confirm the clearing of this channel with \`!clearChannel confirm\``
+        );
+      }
     }
 
     for (const [key, { time }] of confirmationMap.entries()) {
@@ -49,4 +59,5 @@ export const action = async (msg: Message, args: string[]): Promise<void> => {
   }
 };
 
-export const description = "clears all the messages from the current channel";
+export const description =
+  "clears the 100 most recent messages from the current channel";

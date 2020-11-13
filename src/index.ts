@@ -3,6 +3,7 @@ import { client } from "./client";
 import { epicCommands } from "./epicCommands";
 import { action as rick } from "./epicCommands/rick";
 import { ownerMessage } from "./ownerMessage";
+import { replaceMentions } from "./utils/replaceMentions";
 
 dotenv.config();
 
@@ -47,7 +48,7 @@ client.on("message", async (msg) => {
     const reply: string[] = [];
 
     if (msg.content !== "!help") {
-      reply.push(`\`${msg.content}\` is not a valid command`);
+      reply.push(`\`${replaceMentions(msg)}\` is not a valid command`);
     }
 
     reply.push("Here is a list of all valid commands you can use: ");
